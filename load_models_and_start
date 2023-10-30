@@ -19,7 +19,7 @@ base_path=$(dirname "$DATADIR")
 
 sd_model_path=$DATA_DIR/models/Stable-diffusion/
 vae_path=$DATA_DIR/models/VAE/
-extension_path=$DATA_DIR/extensions/
+extension_path=$DATA_DIR/config/auto/extensions/
 controlnet_model_path="${extension_path}sd-webui-controlnet/models/"
 mkdir -p $sd_model_path
 mkdir -p $extension_path
@@ -121,16 +121,32 @@ function download_hf_file() {
 function install_extension() {
   extension_name=$1
   extension_repo=$2
-  # Check to see if it already exists
+  # Check to see if it already exists and is a git repo
   if [ -d "$extension_path$extension_name" ]; then
-    echo "Extension $extension_name already exists. Skipping download."
-    return
+    if [ -d "$extension_path$extension_name/.git" ]; then
+      echo "Extension $extension_name already exists. Updating."
+      cd $extension_path$extension_name
+      git pull
+      cd -
+    else
+      echo "Extension $extension_name already exists but is not a git repo. Cloning anyway."
+      cd $extension_path$extension_name
+      git init
+      git remote add origin $extension_repo
+      default_branch=$(git remote show origin | grep "HEAD branch" | awk '{print $NF}')
+      git fetch origin $default_branch
+      git checkout $default_branch
+      cd -
+    fi
+  # echo "Extension $extension_name already exists. Skipping download."
+  # return
+  else
+    git clone $extension_repo $extension_path$extension_name
+    echo "Installed extension $extension_name from $extension_repo"
   fi
-  git clone $extension_repo $extension_path$extension_name
-  echo "Installed extension $extension_name from $extension_repo"
 }
 
-install_extension sd-webui-controlnet https://github.com/Mikubill/sd-webui-controlnet.git
+install_extension sd-webui-controlnet https://github.com/Mikubill/sd-webui-controlnet
 
 if [ -n "$CIVITAI_MODEL_VERSION_IDS" ]; then
   IFS=',' read -ra VERSION_IDS <<<"$CIVITAI_MODEL_VERSION_IDS"
