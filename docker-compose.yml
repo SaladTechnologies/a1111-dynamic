@@ -1,0 +1,26 @@
+version: '3'
+services:
+  sdnext:
+    image: saladtechnologies/a1111:dynamic
+    build:
+      context: .
+      dockerfile: Dockerfile
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              capabilities: [ gpu ]
+              count: all
+    ports:
+      - 7860:7860
+    volumes:
+      - ./models:/data/models
+    environment:
+      # A comma separated list of model version ids to load
+      CIVITAI_MODEL_VERSION_IDS: 122143,128713
+
+      # Set to 1 to enable the refiner
+      LOAD_REFINER: 0
+
+      EXTENSIONS: 'deforum|https://github.com/deforum-art/sd-webui-deforum'
