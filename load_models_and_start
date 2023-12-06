@@ -29,23 +29,7 @@ manifest=$(./configure \
   --extension-path $extension_path \
   --controlnet-model-path $controlnet_model_path \
   --lora-path $lora_model_path)
-
-# manifest is a json blob. if manifest.models.controlnet (an array) has length > 0, we need to install the controlnet extension
-controlnet=$(echo $manifest | jq -r '.models.controlnet')
-if [ "$controlnet" != "[]" ]; then
-  extensions=$(echo $manifest | jq -r '.extensions')
-  # if extensions doesn't include sd-webui-controlnet, we need to install it
-  if [[ $extensions != *"sd-webui-controlnet"* ]]; then
-    echo "Controlnet Models found, but no controlnet extension. Installing controlnet extension."
-    ./configure \
-      --ckpt-path $sd_model_path \
-      --vae-path $vae_path \
-      --extension-path $extension_path \
-      --controlnet-model-path $controlnet_model_path \
-      --lora-path $lora_model_path \
-      --extension-urls https://github.com/Mikubill/sd-webui-controlnet
-  fi
-fi
+echo $manifest
 
 if [ "$LOAD_ONLY" == "1" ]; then
   echo "Exiting after loading models"

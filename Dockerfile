@@ -16,6 +16,8 @@ ENV HOST='0.0.0.0'
 ENV PORT=7860
 ENV DATA_DIR='/data'
 
+RUN git clone https://github.com/Mikubill/sd-webui-controlnet $DATA_DIR/config/auto/extensions/sd-webui-controlnet
+
 ENTRYPOINT ["./load_models_and_start"]
 
 CMD python -u webui.py --listen --port 7859 --allow-code --xformers --enable-insecure-extension-access --api ${CLI_ARGS} & socat TCP6-LISTEN:${PORT},fork TCP4:127.0.0.1:7859;
