@@ -15,6 +15,7 @@ Options:
   --vae-urls <url1,url2>          Comma-separated list of VAE download URLs. Default: ""
   --lora-urls <url1,url2>         Comma-separated list of LoRa download URLs. Default: ""
   --tag <tag>                     Tag to use for the image. Defaults to the CivitAI version IDs with a hyphen between them
+  --image <image>                 Image to build. Default: saladtechnologies/a1111
   --help                          Show this message and exit
 "
 
@@ -30,6 +31,7 @@ extension_urls=""
 ckpt_urls=""
 vae_urls=""
 lora_urls=""
+image="saladtechnologies/a1111"
 while [[ $# -gt 0 ]]; do
   key="$1"
   case $key in
@@ -80,6 +82,11 @@ while [[ $# -gt 0 ]]; do
     shift
     shift
     ;;
+  --image)
+    image="$2"
+    shift
+    shift
+    ;;
   --help)
     echo "$usage"
     exit 0
@@ -100,7 +107,7 @@ fi
 base_tag="dynamic"
 
 docker buildx build \
-  -t saladtechnologies/a1111:$tag \
+  -t $image:$tag \
   -f Dockerfile.baked \
   --platform linux/amd64 \
   --output type=docker \
@@ -116,12 +123,12 @@ docker buildx build \
   --build-arg LORA_URLS=$lora_urls \
   .
 
-docker tag saladtechnologies/a1111:$tag saladtechnologies/a1111:$tag-$git_sha
+docker tag $image:$tag $image:$tag-$git_sha
 
 if [[ $push == true ]]; then
-  echo "Pushing saladtechnologies/a1111:$tag"
-  docker push saladtechnologies/a1111:$tag
+  echo "Pushing $image:$tag"
+  docker push $image:$tag
 
-  echo "Pushing saladtechnologies/a1111:$tag-$git_sha"
-  docker push saladtechnologies/a1111:$tag-$git_sha
+  echo "Pushing $image:$tag-$git_sha"
+  docker push $image:$tag-$git_sha
 fi
