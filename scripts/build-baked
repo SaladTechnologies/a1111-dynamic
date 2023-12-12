@@ -113,7 +113,7 @@ docker buildx build \
   --output type=docker \
   --provenance false \
   --build-arg VERSION=$base_tag \
-  --build-arg CIVITAI_MODEL_VERSION_IDS=$CIVITAI_MODEL_VERSION_IDS \
+  --build-arg CIVITAI_MODEL_VERSION_IDS=$civitai_model_version_ids \
   --build-arg LOAD_REFINER=$load_refiner \
   --build-arg LOAD_SDXL_BASE=$load_sdxl_base \
   --build-arg CONTROLNET_URLS=$controlnet_urls \

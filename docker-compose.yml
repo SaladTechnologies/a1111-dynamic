@@ -19,13 +19,12 @@ services:
       - ./controlnet-models:/data/config/auto/extensions/sd-webui-controlnet/models
     environment:
       # A comma separated list of model version ids to load
-      CIVITAI_MODEL_VERSION_IDS: 135867,126688
-
+      CIVITAI_MODEL_VERSION_IDS: 122143,128713
       # Set to 1 to enable the refiner
       # LOAD_REFINER: 0
 
       # Set to 1 to enable base sdxl
-      LOAD_SDXL_BASE: 1
+      # LOAD_SDXL_BASE: 1
 
       # Comma separated list of download urls for controlnets
-      CONTROLNET_URLS: https://huggingface.co/lllyasviel/sd_control_collection/resolve/main/diffusers_xl_canny_mid.safetensors?download=true
+      # CONTROLNET_URLS: https://huggingface.co/lllyasviel/sd_control_collection/resolve/main/diffusers_xl_canny_mid.safetensors?download=true
