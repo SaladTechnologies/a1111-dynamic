@@ -20,7 +20,7 @@ The "baked" images use this one as a base
 ### With a model preloaded
 
 ```
-Usage: ./build-baked [OPTIONS]
+Usage: ./scripts/build-baked [OPTIONS]
 
 Options:
   --push                          Push the built image to DockerHub. Default: false
